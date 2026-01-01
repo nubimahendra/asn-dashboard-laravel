@@ -16,28 +16,49 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Pembungkus Utama */
+        #wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
         }
     </style>
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
-    <div class="flex min-h-screen">
+    <div id="wrapper">
         <!-- Sidebar -->
         <aside id="main-sidebar"
-            class="w-64 bg-white dark:bg-gray-800 shadow-md hidden md:flex flex-col fixed h-full overflow-hidden z-10 transition-transform duration-300 border-r dark:border-gray-700">
+            class="w-64 bg-white dark:bg-gray-800 shadow-md flex-col h-screen sticky top-0 z-20 flex-shrink-0 border-r dark:border-gray-700 hidden md:flex transition-all duration-300">
             <div
                 class="p-6 border-b border-gray-100 dark:border-gray-700 flex-shrink-0 flex items-center justify-between">
-                <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h2 id="sidebar-title"
+                    class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2 whitespace-nowrap overflow-hidden transition-all duration-300">
+                    <svg class="w-6 h-6 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
                         </path>
                     </svg>
-                    Statistik ASN
+                    <span class="sidebar-text">Statistik ASN</span>
                 </h2>
+                <!-- Sidebar Toggle Button -->
+                <button id="sidebar-toggle"
+                    class="p-1 rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none ml-auto">
+                    <svg id="toggle-icon" class="w-6 h-6 transform transition-transform duration-300" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg>
+                </button>
             </div>
 
-            <div class="p-4 flex-shrink-0">
+            <!-- Filter Content Wrapper (Collapsible) -->
+            <div id="sidebar-content"
+                class="p-4 flex-shrink-0 transition-opacity duration-300 overflow-hidden whitespace-nowrap">
                 <label
                     class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
                     Filter Unit Kerja
@@ -118,8 +139,9 @@
         </aside>
 
         <!-- Main Content -->
+        <!-- Main Content -->
         <main id="main-content"
-            class="flex-1 md:ml-64 bg-gray-50 dark:bg-gray-900 min-h-screen transition-all duration-300">
+            class="flex-1 bg-gray-50 dark:bg-gray-900 min-h-screen transition-all duration-300 w-full">
             <div class="container mx-auto px-6 py-8">
                 <!-- Header -->
                 <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -430,6 +452,44 @@
             }
             updateChartTheme(); // Function to update charts if needed
         });
+
+        // Sidebar Toggle Logic (Mini Sidebar)
+        const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+        const mainSidebar = document.getElementById('main-sidebar');
+        const sidebarContent = document.getElementById('sidebar-content');
+        const sidebarTexts = document.querySelectorAll('.sidebar-text');
+        const toggleIcon = document.getElementById('toggle-icon');
+
+        if (sidebarToggleBtn && mainSidebar) {
+            sidebarToggleBtn.addEventListener('click', () => {
+                const isCollapsed = mainSidebar.classList.contains('w-20');
+
+                if (isCollapsed) {
+                    // EXPAND
+                    mainSidebar.classList.remove('w-20');
+                    mainSidebar.classList.add('w-64');
+
+                    // Show content
+                    sidebarContent.classList.remove('opacity-0', 'pointer-events-none');
+                    sidebarTexts.forEach(el => el.classList.remove('hidden'));
+
+                    // Rotate Icon Back
+                    toggleIcon.classList.remove('rotate-180');
+
+                } else {
+                    // COLLAPSE
+                    mainSidebar.classList.remove('w-64');
+                    mainSidebar.classList.add('w-20');
+
+                    // Hide content
+                    sidebarContent.classList.add('opacity-0', 'pointer-events-none');
+                    sidebarTexts.forEach(el => el.classList.add('hidden'));
+
+                    // Rotate Icon
+                    toggleIcon.classList.add('rotate-180');
+                }
+            });
+        }
 
 
 

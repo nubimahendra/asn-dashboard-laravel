@@ -7,6 +7,27 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+</p>
+
+## Technology Stack
+
+**Backend**
+*   **Framework:** Laravel 12.0
+*   **Language:** PHP ^8.2
+*   **Database:** MySQL (implied by typical Laravel usage & previous conversations)
+
+**Frontend**
+*   **Styling:** Tailwind CSS 4.0 (via CDN & Vite)
+*   **Charting:** ApexCharts (via CDN)
+*   **Build Tool:** Vite 7.0
+*   **Font:** Google Fonts (Inter)
+
+**Key Features**
+*   **Dashboard:** Custom statistical dashboard with charts.
+*   **Dark Mode:** Built-in dark/light mode toggle with persistence.
+*   **Sidebar Filter:** Custom searchable dropdown for filtering data by Unit Kerja (OPD).
+*   **Responsive:** optimized for desktop and mobile views.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
