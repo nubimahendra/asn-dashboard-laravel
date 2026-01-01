@@ -35,14 +35,6 @@
                     </svg>
                     Statistik ASN
                 </h2>
-                <!-- Sidebar Toggle Button (Inside Sidebar) -->
-                <button id="sidebar-close"
-                    class="p-1 rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
-                    </svg>
-                </button>
             </div>
 
             <div class="p-4 flex-shrink-0">
@@ -132,15 +124,6 @@
                 <!-- Header -->
                 <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div class="flex items-center gap-4">
-                        <!-- Sidebar Open Button (Visible only when sidebar hidden) -->
-                        <button id="sidebar-open"
-                            class="md:hidden p-2 rounded-lg bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
-                        </button>
-
                         <div>
                             <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Dashboard Statistik ASN</h1>
                             <p class="text-gray-500 dark:text-gray-400 mt-1 flex items-center">
@@ -448,52 +431,7 @@
             updateChartTheme(); // Function to update charts if needed
         });
 
-        // Sidebar Toggle Logic
-        const sidebarCloseBtn = document.getElementById('sidebar-close');
-        const sidebarOpenBtn = document.getElementById('sidebar-open');
-        const mainSidebar = document.getElementById('main-sidebar');
-        const mainContent = document.getElementById('main-content');
 
-        function toggleSidebar() {
-            // Check visibility using computed style to handle responsive utility classes correctly
-            const styles = window.getComputedStyle(mainSidebar);
-            const isVisible = styles.display !== 'none';
-
-            if (isVisible) {
-                // HIDE SIDEBAR
-                mainSidebar.classList.add('hidden');
-                mainSidebar.classList.remove('md:flex'); // Remove desktop override
-                mainSidebar.classList.remove('flex');    // Remove general flex if present
-
-                // Adjust margin for content on desktop
-                if (window.innerWidth >= 768) {
-                    mainContent.classList.remove('md:ml-64');
-                    mainContent.classList.add('ml-0');
-                    if (sidebarOpenBtn) sidebarOpenBtn.classList.remove('md:hidden');
-                }
-            } else {
-                // SHOW SIDEBAR
-                mainSidebar.classList.remove('hidden');
-                mainSidebar.classList.add('md:flex'); // Restore desktop override
-                mainSidebar.classList.add('flex');    // Ensure display:flex
-
-                // Adjust margin for content on desktop
-                if (window.innerWidth >= 768) {
-                    mainContent.classList.add('md:ml-64');
-                    mainContent.classList.remove('ml-0');
-                    if (sidebarOpenBtn) sidebarOpenBtn.classList.add('md:hidden');
-                }
-            }
-        }
-
-        if (mainSidebar && mainContent) {
-            if (sidebarCloseBtn) {
-                sidebarCloseBtn.addEventListener('click', toggleSidebar);
-            }
-            if (sidebarOpenBtn) {
-                sidebarOpenBtn.addEventListener('click', toggleSidebar);
-            }
-        }
 
         function updateChartTheme() {
             // Reload page is easiest to reset chart colors for dark mode, 
