@@ -63,6 +63,26 @@ return [
             ]) : [],
         ],
 
+        'sidawai' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_REMOTE_HOST', '127.0.0.1'),       // <--- INI KUNCINYA
+            'port' => env('DB_REMOTE_PORT', '3306'),            // <--- HARUS REMOTE
+            'database' => env('DB_REMOTE_DATABASE', 'forge'),   // <--- HARUS REMOTE
+            'username' => env('DB_REMOTE_USERNAME', 'forge'),   // <--- HARUS REMOTE
+            'password' => env('DB_REMOTE_PASSWORD', ''),        // <--- HARUS REMOTE
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
@@ -148,7 +168,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-database-'),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 

@@ -2,75 +2,90 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PegawaiAktif;
+use App\Models\SnapshotPegawai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        // 0. Filter Setup
+        // 0. Filter Setup (pd = Perangkat Daerah / OPD)
         $filterOpd = $request->input('opd');
-        $query = PegawaiAktif::query();
+
+        $listOpd = SnapshotPegawai::select('pd')
+            ->whereNotNull('pd')
+            ->distinct()
+            ->orderBy('pd')
+            ->pluck('pd');
+
+        $query = SnapshotPegawai::query();
 
         if ($filterOpd) {
-            $query->where('opd', $filterOpd);
+            $query->where('pd', $filterOpd);
         }
-
-        // Fetch List OPD for Sidebar
-        $listOpd = PegawaiAktif::select('opd')
-            ->distinct()
-            ->orderBy('opd')
-            ->pluck('opd');
 
         // 1. Top Cards Metrics
-        // Clone query for scalar values so we don't mutate the base query if we were re-using it (though we are building fresh queries for most)
-        // Actually, let's just apply the filter filter to every specific sub-query to be safe and explicit, or use a base builder.
-        // Using a base builder is cleaner but model static calls are used below. Let's just create a helper closure or apply individually.
+        // 1. Top Cards Metrics
+        // Note: Calculations need to check for specific string matches or just count
+        $totalPegawai = (clone $query)->count();
 
-        $applyFilter = function ($q) use ($filterOpd) {
-            if ($filterOpd) {
-                $q->where('opd', $filterOpd);
-            }
-        };
+        // Updated Logic for Jenikel: 1 or L% -> Laki-laki, 2 or P% -> Perempuan
+        $totalLaki = (clone $query)->where(function ($q) {
+            $q->where('jenikel', 'LIKE', 'L%')
+                ->orWhere('jenikel', 'LIKE', '1%')
+                ->orWhere('jenikel', 'LIKE', 'Pria%');
+        })->count();
 
-        $totalPegawai = PegawaiAktif::when($filterOpd, function ($q) use ($filterOpd) {
-            $q->where('opd', $filterOpd); })->count();
+        $totalPerempuan = (clone $query)->where(function ($q) {
+            $q->where('jenikel', 'LIKE', 'P%')
+                ->orWhere('jenikel', 'LIKE', '2%')
+                ->orWhere('jenikel', 'LIKE', 'Wanita%');
+        })
+            ->whereNot('jenikel', 'LIKE', 'Pria%') // Safety check
+            ->count();
 
-        // Fetch jenikel stats
-        $statsJenikel = PegawaiAktif::select('jenikel', DB::raw('count(*) as total'))
-            ->when($filterOpd, function ($q) use ($filterOpd) {
-                $q->where('opd', $filterOpd); })
-            ->groupBy('jenikel')
-            ->pluck('total', 'jenikel');
-
-        // Map keys loosely to 'L'/'Laki-laki' and 'P'/'Perempuan' just in case
-        $totalLaki = 0;
-        $totalPerempuan = 0;
-        foreach ($statsJenikel as $key => $val) {
-            if (stripos($key, 'L') === 0 || stripos($key, 'Pria') !== false)
-                $totalLaki += $val;
-            if (stripos($key, 'P') === 0 && stripos($key, 'Pria') === false)
-                $totalPerempuan += $val; // 'Perempuan' or 'P'
-        }
-
-        $avgUsia = PegawaiAktif::when($filterOpd, function ($q) use ($filterOpd) {
-            $q->where('opd', $filterOpd); })->avg('usia');
+        // New Summaries: CPNS, PNS, PPPK
+        $totalCpns = (clone $query)->where('sts_peg', 'LIKE', '%CPNS%')->count();
+        $totalPns = (clone $query)->where('sts_peg', 'LIKE', '%PNS%')->where('sts_peg', 'NOT LIKE', '%CPNS%')->count();
+        $totalPppk = (clone $query)->where('sts_peg', 'LIKE', '%PPPK%')->count();
 
         // 2. Charts Data
 
         // Chart 1: Jenis Kelamin (Pie)
-        // Format for ApexCharts: labels: [], series: []
-        $chartJenikel = [
-            'labels' => $statsJenikel->keys()->toArray(),
-            'series' => $statsJenikel->values()->toArray(),
+        // Group by normalized jenikel if possible. 
+        // Since we can't easily normalize in query with SQlite/MySQL diffs easily without raw, 
+        // let's fetch raw stats and map in PHP.
+        $rawJenikel = (clone $query)->select('jenikel', DB::raw('count(*) as total'))
+            ->groupBy('jenikel')
+            ->pluck('total', 'jenikel');
+
+        $statsJenikel = [
+            'Laki-laki' => 0,
+            'Perempuan' => 0
         ];
 
-        // Chart New: Jenis Pegawai (Pie)
-        $statsStsPeg = PegawaiAktif::select('sts_peg', DB::raw('count(*) as total'))
-            ->when($filterOpd, function ($q) use ($filterOpd) {
-                $q->where('opd', $filterOpd); })
+        foreach ($rawJenikel as $key => $val) {
+            // Check Laki
+            if (str_starts_with($key, '1') || stripos($key, 'L') === 0 || stripos($key, 'Pria') !== false) {
+                $statsJenikel['Laki-laki'] += $val;
+            }
+            // Check Perempuan
+            elseif (str_starts_with($key, '2') || stripos($key, 'P') === 0 || stripos($key, 'Wanita') !== false) {
+                if (stripos($key, 'Pria') === false) {
+                    $statsJenikel['Perempuan'] += $val;
+                }
+            }
+        }
+
+        $chartJenikel = [
+            'labels' => array_keys($statsJenikel),
+            'series' => array_values($statsJenikel),
+        ];
+
+        // Chart 2: Status Pegawai (Pie)
+        $statsStsPeg = (clone $query)->select('sts_peg', DB::raw('count(*) as total'))
             ->groupBy('sts_peg')
             ->pluck('total', 'sts_peg');
 
@@ -79,68 +94,47 @@ class DashboardController extends Controller
             'series' => $statsStsPeg->values()->toArray(),
         ];
 
-        // Chart 2: Golongan (Bar)
-        $dataGol = PegawaiAktif::select('gol', DB::raw('count(*) as total'))
-            ->when($filterOpd, function ($q) use ($filterOpd) {
-                $q->where('opd', $filterOpd); })
-            ->groupBy('gol')
-            ->orderBy('gol')
-            ->pluck('total', 'gol');
-        $chartGolongan = [
-            'categories' => $dataGol->keys()->toArray(),
-            'series' => $dataGol->values()->toArray(),
-        ];
-
-        // Chart 3: Pendidikan (Bar)
-        $dataPendidikan = PegawaiAktif::select('pendidikan', DB::raw('count(*) as total'))
-            ->when($filterOpd, function ($q) use ($filterOpd) {
-                $q->where('opd', $filterOpd); })
-            ->groupBy('pendidikan')
+        // Chart 3: Pendidikan (tk_pend) (Bar)
+        $dataPendidikan = (clone $query)->select('tk_pend', DB::raw('count(*) as total'))
+            ->whereNotNull('tk_pend')
+            ->groupBy('tk_pend')
             ->orderBy('total', 'desc')
-            ->pluck('total', 'pendidikan');
+            ->pluck('total', 'tk_pend');
+
         $chartPendidikan = [
             'categories' => $dataPendidikan->keys()->toArray(),
             'series' => $dataPendidikan->values()->toArray(),
         ];
 
-        // Chart 4: Distribusi Usia (Area/Line)
-        $dataUsia = PegawaiAktif::select('usia', DB::raw('count(*) as total'))
-            ->when($filterOpd, function ($q) use ($filterOpd) {
-                $q->where('opd', $filterOpd); })
-            ->groupBy('usia')
-            ->orderBy('usia')
-            ->pluck('total', 'usia');
-        $chartUsia = [
-            'categories' => $dataUsia->keys()->toArray(),
-            'series' => $dataUsia->values()->toArray(),
+        // Chart 4: Eselon (Bar) - Replaces Golongan/Jabatan generic
+        $dataEselon = (clone $query)->select('eselon', DB::raw('count(*) as total'))
+            ->whereNotNull('eselon')
+            ->where('eselon', '!=', '')
+            ->groupBy('eselon')
+            ->orderBy('eselon')
+            ->pluck('total', 'eselon');
+
+        $chartEselon = [
+            'categories' => $dataEselon->keys()->toArray(),
+            'series' => $dataEselon->values()->toArray(),
         ];
 
-        // Chart 5: Jenis Jabatan (Bar)
-        $dataJbt = PegawaiAktif::select('jenis_jbt', DB::raw('count(*) as total'))
-            ->when($filterOpd, function ($q) use ($filterOpd) {
-                $q->where('opd', $filterOpd); })
-            ->groupBy('jenis_jbt')
-            ->orderBy('total', 'desc')
-            ->pluck('total', 'jenis_jbt');
-        $chartJenisJbt = [
-            'categories' => $dataJbt->keys()->toArray(),
-            'series' => $dataJbt->values()->toArray(),
-        ];
-
-        // Chart 6: Unit Kerja (Horizontal Bar - Top 10)
-        // Even if filtered by OPD, we might still want to see maybe sub-units if they existed, but here we only have OPD.
-        // If filtered, it will just show 1 bar, which is correct behavior (verifies filter).
-        $dataOpd = PegawaiAktif::select('opd', DB::raw('count(*) as total'))
-            ->when($filterOpd, function ($q) use ($filterOpd) {
-                $q->where('opd', $filterOpd); })
-            ->groupBy('opd')
+        // Chart 5: Unit Kerja (Horizontal Bar - Top 10)
+        $dataOpd = (clone $query)->select('pd', DB::raw('count(*) as total'))
+            ->whereNotNull('pd')
+            ->groupBy('pd')
             ->orderBy('total', 'desc')
             ->limit(10)
-            ->pluck('total', 'opd');
+            ->pluck('total', 'pd');
+
         $chartOpd = [
             'categories' => $dataOpd->keys()->toArray(),
             'series' => $dataOpd->values()->toArray(),
         ];
+
+        // Last Sync Info
+        $lastSyncRaw = SnapshotPegawai::max('last_sync_at');
+        $lastSync = $lastSyncRaw ? Carbon::parse($lastSyncRaw)->format('d M Y H:i') : '-';
 
         return view('dashboard', compact(
             'listOpd',
@@ -148,14 +142,15 @@ class DashboardController extends Controller
             'totalPegawai',
             'totalLaki',
             'totalPerempuan',
-            'avgUsia',
+            'totalPns',
+            'totalCpns',
+            'totalPppk',
             'chartJenikel',
-            'chartGolongan',
+            'chartStsPeg',
             'chartPendidikan',
-            'chartUsia',
-            'chartJenisJbt',
+            'chartEselon',
             'chartOpd',
-            'chartStsPeg'
+            'lastSync'
         ));
     }
 }
