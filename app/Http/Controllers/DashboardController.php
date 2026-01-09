@@ -132,9 +132,24 @@ class DashboardController extends Controller
             'series' => $dataOpd->values()->toArray(),
         ];
 
+        // 6. Paginated Table Data
+        $pegawaiQuery = (clone $query)->select('nama_pegawai', 'jabatan', 'pd', 'sts_peg', 'tk_pend');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $pegawaiQuery->where('nama_pegawai', 'like', '%' . $request->search . '%');
+        }
+
+        $pegawai = $pegawaiQuery->orderBy('nama_pegawai')
+            ->paginate(10)
+            ->withQueryString();
+
         // Last Sync Info
         $lastSyncRaw = SnapshotPegawai::max('last_sync_at');
         $lastSync = $lastSyncRaw ? Carbon::parse($lastSyncRaw)->format('d M Y H:i') : '-';
+
+        if ($request->ajax()) {
+            return view('partials.employee-table', compact('pegawai'));
+        }
 
         return view('dashboard', compact(
             'listOpd',
@@ -150,6 +165,7 @@ class DashboardController extends Controller
             'chartPendidikan',
             'chartEselon',
             'chartOpd',
+            'pegawai',
             'lastSync'
         ));
     }
