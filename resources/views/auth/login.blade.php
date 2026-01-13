@@ -20,7 +20,7 @@
             overflow: hidden;
         }
         .card-header-custom {
-            background-color: #198754; /* Warna Hijau Khas Pemda/ASN */
+            background-color: #800000; /* Warna Hijau Khas Pemda/ASN */
             color: white;
             padding: 20px;
             text-align: center;
@@ -34,8 +34,8 @@
         <div class="col-md-5 col-lg-4">
             <div class="card card-login">
                 <div class="card-header-custom">
-                    <h4 class="mb-0">🔐 SI-ASN Login</h4>
-                    <small>Silakan masuk untuk akses dashboard</small>
+                    <h4 class="mb-0">🔐 Dashboard-ASN</h4>
+                    <small>Silakan Log in untuk akses dashboard</small>
                 </div>
                 <div class="card-body p-4 bg-white">
                     

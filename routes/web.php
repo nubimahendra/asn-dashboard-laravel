@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function () {
     // Admin Only Routes
     Route::middleware([\App\Http\Middleware\IsAdmin::class])->group(function () {
         Route::post('/sync-pegawai', [SyncController::class, 'sync'])->name('sync.pegawai');
+        Route::resource('users', \App\Http\Controllers\UserController::class);
 
         Route::prefix('admin/chat')->name('admin.chat.')->group(function () {
             Route::get('/', [ChatAdminController::class, 'index'])->name('index');
