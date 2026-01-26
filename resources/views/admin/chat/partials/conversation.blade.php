@@ -8,7 +8,7 @@
         </div>
         <div>
             <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100">
-                {{ $pegawai ? $pegawai->nama_pegawai : $phoneNumber }}
+                {{ $pegawai ? $pegawai->nama_pegawai : $identifier }}
             </h3>
             <p class="text-xs text-gray-500 dark:text-gray-400">
                 {{ $pegawai ? $pegawai->jabatan : 'Unknown' }}
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="text-xs text-gray-400">
-        {{ $phoneNumber }}
+        {{ $identifier }}
     </div>
 </div>
 
@@ -31,7 +31,7 @@
 <!-- Footer / Input -->
 <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
     <form id="reply-form" class="relative">
-        <input type="hidden" name="phone_number" value="{{ $phoneNumber }}">
+        <input type="hidden" name="phone_number" value="{{ $identifier }}">
         <textarea name="message" rows="1"
             class="w-full pl-4 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none custom-scrollbar text-sm text-gray-800 dark:text-gray-200"
             placeholder="Tulis balasan..." required></textarea>

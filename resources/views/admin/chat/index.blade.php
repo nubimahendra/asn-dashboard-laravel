@@ -13,12 +13,12 @@
             <!-- List -->
             <div class="flex-1 overflow-y-auto custom-scrollbar">
                 @forelse($chats as $chat)
-                    <button onclick="loadChat('{{ $chat->sender_number }}')"
+                    <button onclick="loadChat('{{ $chat->identifier }}')"
                         class="w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-50 dark:border-gray-800 focus:outline-none focus:bg-blue-50 dark:focus:bg-blue-900/20 group relative"
-                        id="contact-{{ $chat->sender_number }}">
+                        id="contact-{{ $chat->identifier }}">
                         <div class="flex justify-between items-start mb-1">
                             <span class="font-semibold text-gray-800 dark:text-gray-200 truncate pr-2">
-                                {{ $chat->pegawai ? $chat->pegawai->nama_pegawai : $chat->sender_number }}
+                                {{ $chat->display_name }}
                             </span>
                             <span class="text-xs text-gray-400 whitespace-nowrap">
                                 {{ $chat->latest_message ? $chat->latest_message->created_at->format('H:i') : '' }}
@@ -34,6 +34,10 @@
                                     Baru
                                 </span>
                             @endif
+                        </div>
+                        <!-- Source Icon -->
+                        <div class="absolute bottom-2 right-4 text-xs text-gray-300">
+                            {{ $chat->source == 'whatsapp' ? 'WA' : 'WEB' }}
                         </div>
                     </button>
                 @empty

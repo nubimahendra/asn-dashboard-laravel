@@ -16,6 +16,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Web Chat Routes (Session Based API)
+    Route::get('/api/chat/history', [App\Http\Controllers\ChatController::class, 'getHistory'])->name('chat.history');
+    Route::post('/api/chat/send', [App\Http\Controllers\ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::post('/api/chat/verify-nip', [App\Http\Controllers\ChatController::class, 'verifyNip'])->name('chat.verify');
+
+
     // Admin Only Routes
     Route::middleware([\App\Http\Middleware\IsAdmin::class])->group(function () {
         // Route::post('/sync-pegawai', [SyncController::class, 'sync'])->name('sync.pegawai'); // Old route
@@ -33,7 +39,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('admin/chat')->name('admin.chat.')->group(function () {
             Route::get('/', [ChatAdminController::class, 'index'])->name('messages.index'); // Changed name
-            Route::get('/messages/{phone}', [ChatAdminController::class, 'show'])->name('messages.show'); // Moved to /messages/
+            Route::get('/messages/{identifier}', [ChatAdminController::class, 'show'])->name('messages.show'); // Moved to /messages/
             Route::post('/messages/reply', [ChatAdminController::class, 'reply'])->name('messages.reply');
 
             Route::get('/api', [\App\Http\Controllers\FonnteController::class, 'index'])->name('api.index');
