@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SyncController;
-use App\Http\Controllers\ChatAdminController;
 use App\Http\Controllers\WhatsAppController;
 
 // Auth Routes
@@ -16,10 +15,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Web Chat Routes (Session Based API)
-    Route::get('/api/chat/history', [App\Http\Controllers\ChatController::class, 'getHistory'])->name('chat.history');
-    Route::post('/api/chat/send', [App\Http\Controllers\ChatController::class, 'sendMessage'])->name('chat.send');
-    Route::post('/api/chat/verify-nip', [App\Http\Controllers\ChatController::class, 'verifyNip'])->name('chat.verify');
+    // Web Chat Routes (Session Based API) - REMOVED
 
 
     // Admin Only Routes
@@ -37,19 +33,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/snapshot/export/pdf', [App\Http\Controllers\SnapshotController::class, 'downloadPdf'])->name('snapshot.export.pdf');
         Route::get('/snapshot/export/excel', [App\Http\Controllers\SnapshotController::class, 'downloadExcel'])->name('snapshot.export.excel');
 
-        Route::prefix('admin/chat')->name('admin.chat.')->group(function () {
-            Route::get('/', [ChatAdminController::class, 'index'])->name('messages.index'); // Changed name
-            Route::get('/messages/{identifier}', [ChatAdminController::class, 'show'])->name('messages.show'); // Moved to /messages/
-            Route::post('/messages/reply', [ChatAdminController::class, 'reply'])->name('messages.reply');
-
-            Route::get('/api', [\App\Http\Controllers\FonnteController::class, 'index'])->name('api.index');
-            Route::post('/api', [\App\Http\Controllers\FonnteController::class, 'store'])->name('api.store');
-            Route::post('/api/check', [\App\Http\Controllers\FonnteController::class, 'checkConnection'])->name('api.check');
-
-            Route::resource('contacts', \App\Http\Controllers\ChatContactController::class);
-            Route::resource('faqs', \App\Http\Controllers\FaqController::class);
-
-        });
+        // Chat Admin Routes - REMOVED
 
         // Pengajuan Cerai Routes
         Route::controller(\App\Http\Controllers\PengajuanCeraiController::class)

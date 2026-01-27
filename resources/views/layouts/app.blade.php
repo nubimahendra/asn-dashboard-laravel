@@ -167,46 +167,7 @@
                     <hr class="my-2 border-dashed border-gray-200 dark:border-gray-700 mx-2">
 
                     <!-- Chatbot Menu (Hidden) -->
-                    <!-- 
-                    <nav class="space-y-1">
-                        <div>
-                            <button type="button" id="menu-chatbot-toggle"
-                                class="w-full flex items-center justify-between px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none transition-colors group">
-                                <div class="flex items-center">
-                                    <svg class="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-300 flex-shrink-0 transition-colors"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                                    </svg>
-                                    <span class="sidebar-text truncate">Chatbot</span>
-                                </div>
-                                <svg id="menu-chatbot-icon"
-                                    class="sidebar-text h-4 w-4 text-gray-400 transform transition-transform duration-200"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="menu-chatbot-content" class="hidden mt-2 space-y-2 pl-2 md:pl-0">
-                                <div class="p-2 rounded-lg bg-gray-50 dark:bg-gray-900/50">
-                                    <a href="#"
-                                        class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors">Perangkat</a>
-                                    <a href="{{ route('admin.chat.messages.index') }}"
-                                        class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors">Pesan</a>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors">Grup</a>
-                                    <a href="{{ route('admin.chat.contacts.index') }}"
-                                        class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors">Kontak</a>
-                                    <a href="{{ route('admin.chat.faqs.index') }}"
-                                        class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors">FAQ</a>
-                                    <a href="{{ route('admin.chat.api.index') }}"
-                                        class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors">Api
-                                        Fonnte</a>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
-                     -->
+
 
                     <!-- Laporan Menu -->
                     <nav class="space-y-1 mt-2">
@@ -248,34 +209,7 @@
                     </nav>
 
 
-                    <!-- Helpdesk Menu -->
-                    <nav class="space-y-1 mt-2">
-                        <div>
-                            <button type="button" id="menu-helpdesk-toggle"
-                                class="w-full flex items-center justify-between px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none transition-colors group">
-                                <div class="flex items-center">
-                                    <svg class="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-300 flex-shrink-0 transition-colors"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1 1 0 01-1-1v-6a1 1 0 011-1h2V7a3 3 0 016 0v1z" />
-                                    </svg>
-                                    <span class="sidebar-text truncate">Helpdesk</span>
-                                </div>
-                                <svg id="menu-helpdesk-icon"
-                                    class="sidebar-text h-4 w-4 text-gray-400 transform transition-transform duration-200"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="menu-helpdesk-content" class="hidden mt-2 space-y-2 pl-2 md:pl-0">
-                                <div class="p-2 rounded-lg bg-gray-50 dark:bg-gray-900/50">
-                                    <a href="{{ route('admin.chat.messages.index') }}"
-                                        class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors">Percakapan</a>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
+
 
                     <!-- Surat Menu -->
                     <nav class="space-y-1 mt-2">
@@ -306,15 +240,7 @@
                         </div>
                     </nav>
                     <script>
-                        const menuHelpdeskToggle = document.getElementById('menu-helpdesk-toggle');
-                        const menuHelpdeskContent = document.getElementById('menu-helpdesk-content');
-                        const menuHelpdeskIcon = document.getElementById('menu-helpdesk-icon');
-                        if (menuHelpdeskToggle && menuHelpdeskContent) {
-                            menuHelpdeskToggle.addEventListener('click', () => {
-                                const isHidden = menuHelpdeskContent.classList.contains('hidden');
-                                if (isHidden) { menuHelpdeskContent.classList.remove('hidden'); menuHelpdeskIcon.classList.add('rotate-180'); } else { menuHelpdeskContent.classList.add('hidden'); menuHelpdeskIcon.classList.remove('rotate-180'); }
-                            });
-                        }
+
                     </script>
 
                     <!-- Pengaturan Menu -->
@@ -521,9 +447,7 @@
     </script>
 
     <!-- Helpdesk Widget (Blade Component) -->
-    @auth
-        @include('components.chat-helpdesk')
-    @endauth
+
 
     @yield('scripts')
 </body>

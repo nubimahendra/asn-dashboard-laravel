@@ -34,7 +34,8 @@ class Faq extends Model
         // Normalisasi pesan: lowercase
         $message = strtolower($message);
 
-        return $query->where('is_active', true)
+        return $query
+            // ->where('is_active', true)
             ->where(function ($q) use ($message) {
                 // Mencari apakah 'keywords' ada di dalam $message
                 $words = explode(' ', $message);
