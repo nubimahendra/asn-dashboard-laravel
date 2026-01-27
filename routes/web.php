@@ -51,6 +51,10 @@ Route::middleware(['auth'])->group(function () {
         // Surat Masuk Routes
         Route::get('/surat-masuk/print', [App\Http\Controllers\SuratMasukController::class, 'print'])->name('surat-masuk.print');
         Route::resource('surat-masuk', App\Http\Controllers\SuratMasukController::class);
+
+        // Chatbot Admin (Refactoring to Vanilla JS)
+        // Route::get('/chat', App\Livewire\ChatAdmin::class)->name('chat.index');
+        Route::get('/chat', [App\Http\Controllers\ChatAdminController::class, 'index'])->name('chat.index'); // We need to create this controller
     });
 });
 

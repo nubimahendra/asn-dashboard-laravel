@@ -20,6 +20,10 @@ class AuthController extends Controller
 
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Clear NIP to force re-verification for new chat session
+            $request->user()->update(['nip' => null]);
+
             return redirect()->intended('/')->with('success', 'Login berhasil!');
         }
 

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'nip',
     ];
 
     /**
@@ -45,5 +46,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    /**
+     * Get the chat messages for the user.
+     */
+    public function chatMessages()
+    {
+        return $this->hasMany(ChatMessage::class);
+    }
+
+    /**
+     * Get the pegawai data associated with the user's NIP.
+     */
+    public function snapshotPegawai()
+    {
+        return $this->hasOne(SnapshotPegawai::class, 'nip_baru', 'nip');
     }
 }
