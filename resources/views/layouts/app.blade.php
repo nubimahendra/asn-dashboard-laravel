@@ -195,10 +195,14 @@
                                 </svg>
                             </button>
                             <div id="menu-chatbot-content" class="hidden mt-2 space-y-2 pl-2 md:pl-0">
-                                <div class="p-2 rounded-lg bg-gray-50 dark:bg-gray-900/50">
+                                <div class="p-2 rounded-lg bg-gray-50 dark:bg-gray-900/50 space-y-1">
                                     <a href="{{ route('chat.index') }}"
                                         class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors {{ request()->routeIs('chat.index') ? 'text-blue-600 dark:text-blue-400 font-semibold bg-slate-50 dark:bg-gray-700' : '' }}">
                                         Chat
+                                    </a>
+                                    <a href="{{ route('admin.chat.faqs.index') }}"
+                                        class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors {{ request()->routeIs('admin.chat.faqs.*') ? 'text-blue-600 dark:text-blue-400 font-semibold bg-slate-50 dark:bg-gray-700' : '' }}">
+                                        FAQ
                                     </a>
                                 </div>
                             </div>
@@ -489,6 +493,7 @@
         @endif
     @endauth
 
+    @yield('modals')
 
     @yield('scripts')
 </body>

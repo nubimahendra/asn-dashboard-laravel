@@ -55,6 +55,9 @@ Route::middleware(['auth'])->group(function () {
         // Chatbot Admin (Refactoring to Vanilla JS)
         // Route::get('/chat', App\Livewire\ChatAdmin::class)->name('chat.index');
         Route::get('/chat', [App\Http\Controllers\ChatAdminController::class, 'index'])->name('chat.index'); // We need to create this controller
+
+        // FAQ Routes
+        Route::resource('faqs', \App\Http\Controllers\FaqController::class, ['as' => 'admin.chat']);
     });
 });
 
